@@ -8,11 +8,11 @@
         <version>2.6.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.alreylz</groupId>
-    <artifactId>springboot-course</artifactId>
+    <groupId>com.grupo06</groupId>
+    <artifactId>USU8206</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springboot-course</name>
-    <description>springboot-course</description>
+    <name>USU8206</name>
+    <description>USU8206</description>
     <properties>
         <java.version>11</java.version>
     </properties>
