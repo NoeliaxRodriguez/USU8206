@@ -1,6 +1,8 @@
 package com.grupo06.usu8206.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +11,7 @@ import com.grupo06.usu8206.mysql.entities.User;
 
 import java.util.List;
 
+@CrossOrigin
 @Controller
 public class UserController {
 
@@ -21,51 +24,93 @@ public class UserController {
     // GET - Extraer info de bbdd (listar todos los usuarios)
     @RequestMapping(value = basePath + "/users", method = RequestMethod.GET)
     public @ResponseBody
-    List<User> getAllUsers() {
+    ResponseEntity<List<User>> getAllUsers() {
         List<User> userList = null;
         try {
             userList = uDao.findAll();
+            if (userList == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
-        } catch (Exception e) {
+        }catch (Exception e) {
             System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return userList;
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     // GET (by id) - Extraer info de bbdd (listar un usuario por id)
     @RequestMapping(value = basePath + "/users/{user_name}", method = RequestMethod.GET)
     public @ResponseBody
-    User getUser(@PathVariable String user_name) {
+    ResponseEntity<User> getUser(@PathVariable String user_name) {
         User fromDbUser = null;
         try {
             fromDbUser = uDao.findById(user_name).orElse(null);
-
+            if(fromDbUser == null){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return fromDbUser;
+        return new ResponseEntity<>(fromDbUser, HttpStatus.OK);
     }
 
     //POST
-    @RequestMapping(value = basePath+"/req", method = RequestMethod.POST)
+    @RequestMapping(value = basePath + "/users", method = RequestMethod.POST)
     public @ResponseBody
-    String respondPUT() {
-        return "<h1> Ejemplo POST </h1> ";
+    ResponseEntity<User> insertUser(@RequestBody User u) {
+        try {
+            if(u.equals(null)){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            uDao.save(u);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(u, HttpStatus.OK);
     }
 
-    //PUT
-    @RequestMapping(value = basePath+"/req", method = RequestMethod.PUT)
+    // PUT - Actualización de info en BBDD
+    @RequestMapping(value = basePath + "/users/{user_name}", method = RequestMethod.PUT)
     public @ResponseBody
-    String respondPOST() {
-        return "<h1> Ejemplo PUT </h1> ";
+    ResponseEntity<User> updateUser(@PathVariable String user_name, @RequestBody User toUpdate) {
+        User updatedUser = null;
+        try {
+            if((user_name == null) || (toUpdate == null)) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            // Buscamos por nombre de usuario y en caso de no encontrar nada, obtenemos null
+            User fromDBUser = uDao.findById(user_name).orElse(null);
+
+            if (fromDBUser != null) {
+                uDao.save(toUpdate);
+                updatedUser = toUpdate;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
-
-    //DELETE
-    @RequestMapping(value = basePath+"/req", method = RequestMethod.DELETE)
+    // DELETE - Eliminación de info en BBDD
+    @RequestMapping(value = basePath + "/users/{user_name}", method = RequestMethod.DELETE)
     public @ResponseBody
-    String respondDELETE() {
-        return "<h1> Ejemplo DELETE </h1> ";
+    ResponseEntity<User> deleteOne(@PathVariable String user_name) {
+        User toDeleteUser = null;
+        try {
+            if(user_name == null){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            // Buscamos por nombre de usuario y en caso de no encontrar nada, obtenemos null
+            toDeleteUser = uDao.findById(user_name).orElse(null);
+            uDao.delete(toDeleteUser);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(toDeleteUser, HttpStatus.OK);
     }
-
 }

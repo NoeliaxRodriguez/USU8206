@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @SpringBootApplication
 public class Usu8206Application {
-    public static void main(String[] args){}
+    public static void main(String[] args){SpringApplication.run(Usu8206Application.class, args);}
 
 }
