@@ -14,7 +14,6 @@ import java.util.List;
 @CrossOrigin
 @Controller
 public class UserController {
-
     static final String basePath = "/restful";
 
     // DAO (Data Access Object) / CRUD

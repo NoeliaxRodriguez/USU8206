@@ -1,7 +1,6 @@
 package com.grupo06.usu8206.mysql.entities;
 
 import org.springframework.data.annotation.PersistenceConstructor;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -28,7 +27,6 @@ public User(String apellido1, String apellido2, String correo, String nombre, St
     @Column(name = "user_name")
     private String userName;
 
-    //Creo que esto hay que borrarlo
     private int admin;
 
     private String apellido1;
