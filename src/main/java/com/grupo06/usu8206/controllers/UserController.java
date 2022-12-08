@@ -112,4 +112,19 @@ public class UserController {
         }
         return new ResponseEntity<>(toDeleteUser, HttpStatus.OK);
     }
+
+
+   /* @RequestMapping(value = basePath + "/users/{user_name}", method = RequestMethod.DELETE)
+    public @ResponseBody
+    User deleteTwo(@PathVariable String user_name) {
+        User toDeleteUser = null;
+        user_name = "ghrb";
+            // Buscamos por nombre de usuario y en caso de no encontrar nada, obtenemos null
+            toDeleteUser = uDao.findById(user_name).orElse(null);
+            uDao.delete(toDeleteUser);
+
+        return toDeleteUser;
+    }
+
+    */
 }
